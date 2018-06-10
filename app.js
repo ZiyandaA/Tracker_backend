@@ -14,8 +14,14 @@ var app = express();
 var session = require('express-session');
 var mongoose = require('mongoose');
 var cors = require('cors')
-
-mongoose.connect('mongodb://localhost/mydb');
+var db_host;
+if (process.env.NODE_ENV === "test") {
+  db_host = "test";
+}
+else {
+  db_host = "mydb"
+}
+mongoose.connect('mongodb://localhost/' + db_host);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,7 +67,7 @@ app.use(function(err, req, res, next) {
 
     res.status(500);
     console.log(err.message, 'this is message')
-    res.send({message: err.message});
+    res.send({err: err.message});
   }
 
 });

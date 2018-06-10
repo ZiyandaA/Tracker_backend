@@ -4,6 +4,7 @@ var models = require('../models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    
   if (req.query.withUsers) {
     models.Tracker.find()
         .populate('userID')
@@ -42,6 +43,9 @@ router.get('/:id', (req, res, next) => {
 router.post('/', (req, res, next) => {
     var userID = req.body.userID;
     var name = req.body.name;
+    // if( !userID ) {
+    //     throw new Error();
+    // }
     
     models.Tracker.create({
         userID: userID,
