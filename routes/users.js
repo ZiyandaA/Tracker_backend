@@ -5,6 +5,7 @@ var models = require('../models');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
+  console.log(process.env);
   models.User.find()
     .exec()
     .then(data => {
@@ -14,6 +15,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', (req, res, next) => {
+  console.log(req.body, 'this is body')
   User.create({
     username: req.body.username,
     password: req.body.password

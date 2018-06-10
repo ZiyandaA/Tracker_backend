@@ -11,6 +11,9 @@ router.get('/', function(req, res, next) {
         .then(data => {
             res.send(data);
         })
+        .catch(err => {
+            next(err);
+        })
   }
   else {
     models.Tracker.find()
@@ -18,8 +21,23 @@ router.get('/', function(req, res, next) {
         .then(data => {
             res.send(data);
         })
+        .catch(err => {
+            next(err);
+        })
   }
 });
+//localhost:3000/api/trackers/1
+
+router.get('/:id', (req, res, next) => {
+    models.Tracker.find({_id: req.params.id})
+        .exec()
+        .then(tracker => {
+            res.send(tracker);
+        })
+        .catch(err => {
+            next(err);
+        })
+})
 
 router.post('/', (req, res, next) => {
     var userID = req.body.userID;

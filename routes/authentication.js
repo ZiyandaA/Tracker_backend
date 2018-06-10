@@ -1,14 +1,20 @@
 var express = require('express');
 var router = express.Router();
 var hashThePassword = require('../utils/passwordHash').cryptoThePassword;
-var models = require('../models')
+var models = require('../models');
+var authValidator = require('../validators/auth')
 
 /* GET home page. */
 router.post('/signup', function(req, res, next) {
   var username = req.body.username;
   var password = hashThePassword(req.body.password);
+  authValidator.asAuth(req.body);
+  console.log(req.body, 'this is body')
+
   console.log(username, 'username', password, 'password');
-  console.log(models, 'this is models')
+  if (!username || password.length < 5) {
+    throw new Error();
+  }
   models.User.create({
     username: username,
     password: password,

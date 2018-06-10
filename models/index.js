@@ -1,7 +1,9 @@
 var User = require('./user');
-var Tracker = require('./tracker')
+var Tracker = require('./tracker');
+var TrackerTarget = require('./trackertarget');
 
 module.exports = {
     User,
-    Tracker
+    Tracker,
+    TrackerTarget,
 }
