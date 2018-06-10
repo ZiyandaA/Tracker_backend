@@ -61,7 +61,6 @@ describe('Trackers', () => {
                 .post('/trackers')
                 .send(tracker)
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(500);
                     res.body.should.have.property('err');
                     res.body.should.be.a('object');
