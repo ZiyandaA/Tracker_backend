@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var puppyRouter = require('./routes/puppy');
 var authRouter = require('./routes/authentication');
 var trackerRouter = require('./routes/tracker');
+var findMeRouter = require('./routes/findMe');
 var trackerTargetRouter = require('./routes/trackertarget');
 var app = express();
 var session = require('express-session');
@@ -29,12 +30,19 @@ app.set('view engine', 'jade');
 //middleware
 
 app.use(logger('dev'));
-app.use(cors())
+app.use(function(req, res, next) {
+  console.log(req.headers.origin, 'origin');
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.use(session({
   secret: 'ziyanda',
   saveUninitialized: true,
   resave: false
-}))
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -46,6 +54,7 @@ app.use('/puppys',puppyRouter);
 app.use('/auth', authRouter);
 app.use('/trackers', trackerRouter);
 app.use('/trackertargets', trackerTargetRouter);
+app.use('/find-me', findMeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

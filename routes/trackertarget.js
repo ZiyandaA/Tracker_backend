@@ -4,8 +4,7 @@ var models = require('../models');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    models.TrackerTarget.find({trackerID: req.query.trackerID})
-        .populate('trackerID')
+    models.TrackerTarget.find()
         .exec()
         .then(data => {
             res.send(data);
@@ -25,6 +24,7 @@ router.post('/', (req, res, next) => {
     
     models.TrackerTarget.create({
         trackerID: trackerID,
+        name: name,
         target: target,
         value: value,
         date: Date.now(),

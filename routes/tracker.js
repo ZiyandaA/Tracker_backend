@@ -3,29 +3,52 @@ var router = express.Router();
 var models = require('../models');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
+    try {
+        console.log(req.query, 'this is params')
+        var ObjectId = require('mongoose').Types.ObjectId;
+        let user = await models.User.findById(req.query.user_id).lean().exec();
+        let userTrackers = await models.Tracker.find({userID: user._id}).lean().exec();
+        for (let i=0; i < userTrackers.length; i++) {
+        let trackerTargets = await models.TrackerTarget.find({trackerID: userTrackers[i]._id});
+        userTrackers[i] = Object.assign({}, userTrackers[i], {trackerTargets: trackerTargets})
+        }
+        console.log(userTrackers, 'this is userTrackers')
+        user.trackers = userTrackers;
+        
+
+        res.send(user)
+    }
+    catch (err) {
+        next(err);
+    }
     
-  if (req.query.withUsers) {
-    models.Tracker.find()
-        .populate('userID')
-        .exec()
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-  }
-  else {
-    models.Tracker.find()
-        .exec()
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-  }
+    
+
+    
+//1. we need to find user
+// TimeCreated
+//2. if exists, need to find all trackers by userid
+//3. if each tracker we need to find all trackertargets by trackerID
+//4. get all the data in the single object
+/*
+{
+    user: {
+        ...
+        trackers: [
+            {
+                trackerTargets: [
+                    {}, {}
+                ]
+            }, 
+            {
+                
+            }
+        ]
+    }
+}
+*/
+    
 });
 //localhost:3000/api/trackers/1
 
@@ -57,6 +80,16 @@ router.post('/', (req, res, next) => {
     .catch(err => {
         next(err);
     })
+})
+
+router.delete("/:id", (req, res, next) => {
+    models.Tracker.findById(req.params.id)
+    .remove()
+    .exec()
+    .then(data => {
+        res.send(data);
+    })
+
 })
 
 module.exports = router;

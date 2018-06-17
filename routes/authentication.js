@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var hashThePassword = require('../utils/passwordHash').cryptoThePassword;
 var models = require('../models');
-var authValidator = require('../validators/auth')
+var authValidator = require('../validators/auth');
 
 /* GET home page. */
 router.post('/signup', function(req, res, next) {
@@ -35,12 +35,12 @@ router.post('/signin', (req, res, next) => {
   models.User.findOne({'username': username})
     .then(user => {
       if (user && user.password == password) {
-        console.log(user);
+        console.log(user, 'authorized user');
         req.session.user = user;
         res.send(user);
       }
       else {
-        throw new Error();
+        throw new Error('wrong username or password');
       }
     })
     .catch(err => {
@@ -49,10 +49,10 @@ router.post('/signin', (req, res, next) => {
 })
 
 router.post('/logout', (req, res, next) => {
-  console.log('something')
+  console.log('something');
   if (req.session.user) {
     req.session.destroy(() => {
-      res.send({dostroyed: true})
+      res.send({destroyed: true})
     })
   }
   else {

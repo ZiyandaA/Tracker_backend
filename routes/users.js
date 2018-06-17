@@ -14,6 +14,15 @@ router.get('/', function(req, res, next) {
   
 });
 
+router.delete('/', (req, res, next) => {
+  models.User.remove()
+    .exec()
+    .then(data => {
+      console.log(data);
+      res.send(data);
+    })
+})
+
 router.post('/', (req, res, next) => {
   console.log(req.body, 'this is body')
   User.create({
